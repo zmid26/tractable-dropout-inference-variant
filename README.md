@@ -1,4 +1,4 @@
-# Probabilistic Circuits That Know What They Don't Know
+# Probabilistic Circuits That Know What They Don't Know - Variant by Zane Middaugh
 
 Code for our paper "Probabilistic Circuits That Know What They Don't Know" accepted at UAI 2023 ([Paper](https://proceedings.mlr.press/v216/ventola23a.html), [arXiv version](https://arxiv.org/abs/2302.06544)).
 
