@@ -571,8 +571,22 @@ def test_tdi(model_dir=None, training_dataset=None, dropout_inference=None, batc
             data, target = data.to(device), target.to(device)
 
             if rotation and training_dataset == 'mnist':
-                data = torchvision.transforms.functional.rotate(data.reshape(-1, 1, 28, 28), rotation,
-                                                                fill=-mean / std).reshape(-1, 28, 28)
+                # Define the scaling factor stored in the variable 'rotation'
+                scaling_factor = rotation
+
+                # Assuming 'data' is a PyTorch tensor
+                data = data.reshape(-1, 1, 28, 28)
+
+                # Calculate the new width and height based on the scaling factor
+                new_width = int(28 * scaling_factor)
+                new_height = int(28 * scaling_factor)
+
+                # Perform the scaling using affine transformation with bilinear interpolation
+                data = torchvision.transforms.functional.affine(data, angle=0, translate=[0, 0], scale=scaling_factor, shear=[0, 0], interpolation=torchvision.transforms.functional.InterpolationMode.BILINEAR)
+
+                # Reshape the data back to its original shape
+                data = data.reshape(-1, 28, 28)
+
             data = data.view(data.shape[0], -1)
 
             if dropout_inference > 0.0:
@@ -875,7 +889,8 @@ if __name__ == "__main__":
     pc = run_torch(n_epochs=20, batch_size=200, dropout=0.2, training_dataset='mnist', eval_every_n_epochs=5, lr=0.01)
 
     # run inference
-    rotations = [rot for rot in range(0, 95, 5)]
+    rotations = [rot for rot in range(1,11)]
+    rotations = list(map(lambda x: x / 10,rotations))
 
     results = {}
 
